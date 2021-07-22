@@ -20,7 +20,11 @@ if __name__ == "__main__":
 	#read all files
 	for file in files:	
 		read = open(file,"r")
-		alfafile = "".join(read.readlines())
+		try:
+			alfafile = "".join(read.readlines())
+		except:
+			read.close()
+			continue
 		read.close()
 		#try find alfa
 		regular = r"u8\s*\w+\s*\[\]\s*=\s*\{[\n,\w,\s,\,]*\};"
@@ -34,7 +38,6 @@ if __name__ == "__main__":
 			H = ""
 			name = os.path.basename(file)
 			H = (name[:-2]).upper()
-			print(name, H)
 			source = open(sourcePath, "w+")
 			header = open(headerPath, "w+")
 			

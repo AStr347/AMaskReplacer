@@ -12,21 +12,33 @@ class OldAlfa:
 	wbit = [3,			7,			10,				14]
 	hbit = [4,			7,			11,				14]
 	keybit = [1,          2,          3,              4]
+	#default init values
+	def __init__(self) :
+		self.symbol = ""
+		self.width = 0
+		self.height = 0
+		self.payload = ""
+		self.type = 0
+		self.size = 0
+
 
 class OldSymbol (OldAlfa):
 	
 
 	def __init__(self, s):
+		super().__init__()
 		#get name of symbol
 		self.symbol = (re.findall(r",\w+\)", s)[0])[1 : -1]
 		#get font
 		self.font = (re.findall(r"\(\w+,", s)[0])[1 : -1]
 		#get width, 0, height, 0,
-		sizes = re.findall(r"\s*\d+,\n\s*0,\n",s)
+		sizes = re.findall(r"\s*(\d+),\n*\s*0,\n", s)
+		if(2 > len(sizes)):
+			return None
 		#get width
-		width = re.findall(r"\d+",(sizes[0])[:-5])[0]
+		width = re.findall(r"\d+",(sizes[0]))[0]
 		#get height
-		height = re.findall(r"\d+",(sizes[1])[:-5])[0]
+		height = re.findall(r"\d+",(sizes[1]))[0]
 		self.width = int(width) - 1
 		self.height = int(height) - 1
 		#get payload without sizes
@@ -83,16 +95,19 @@ class OldSymbol (OldAlfa):
 
 class OldImage (OldAlfa):
 	def __init__(self, s):
+		super().__init__()
 		#get name of symbol
-		regular = re.findall(r"u8\s*\w+\s*\[\]\s*=", s)
-		self.symbol = (regular[0])[3 : -4]
+		regular = re.findall(r"u8\s*(\w+)\s*\[\]\s*=", s)
+		self.symbol = (regular[0])
 		
 		#get width, 0, height, 0,
-		sizes = re.findall(r"\n*\s*\d+,\n*\s*0,\n*",s)
+		sizes = re.findall(r"\n*\s*(\d+),\n*\s*0,\n*", s)
+		if(2 > len(sizes)):
+			return None
 		#get width
-		width = re.findall(r"\d+",(sizes[0])[:-5])[0]
+		width = re.findall(r"\d+",(sizes[0]))[0]
 		#get height
-		height = re.findall(r"\d+",(sizes[1])[:-5])[0]
+		height = re.findall(r"\d+",(sizes[1]))[0]
 		self.width = int(width) - 1
 		self.height = int(height) - 1
 		#get payload without sizes
